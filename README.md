@@ -21,9 +21,8 @@ Esta API permite gestionar cursos mediante operaciones CRUD (Crear, Leer, Actual
 
 ### ✅ Obtener todos los cursos
 
-**GET** `/api/v1/course`
-
-- Devuelve una lista de todos los cursos.
+**GET** `/api/v1/course`  
+Devuelve una lista de todos los cursos.
 
 ---
 
@@ -52,89 +51,85 @@ Esta API permite gestionar cursos mediante operaciones CRUD (Crear, Leer, Actual
   "duracionCurso": 40,
   "precioCurso": 100
 }
-Validaciones automáticas con @Valid:
+```
 
-nombreCurso no puede estar vacío.
+- Validaciones automáticas con `@Valid`:
+  - `nombreCurso` no puede estar vacío.
+  - `cantidadEstudiantes` y `precioCurso` no pueden ser negativos.
 
-cantidadEstudiantes y precioCurso no pueden ser negativos.
+- Devuelve el curso creado con su `idCurso`.
+- Responde `400 Bad Request` si los datos no cumplen validaciones.
 
-Devuelve el curso creado con su idCurso.
+---
 
-Responde 400 Bad Request si los datos no cumplen validaciones.
+### 📝 Actualizar un curso
 
-📝 Actualizar un curso
-PUT /api/v1/course/{id}
+**PUT** `/api/v1/course/{id}`
 
-Parámetro: id (UUID)
+- Parámetro: `id` (UUID)  
+- Body igual que POST.  
+- Validaciones automáticas con `@Valid` igual que POST.  
+- Devuelve el curso actualizado o `404 Not Found` si no existe el curso.
 
-Body igual que POST.
+---
 
-Validaciones automáticas con @Valid igual que POST.
+### ❌ Eliminar un curso
 
-Devuelve el curso actualizado o 404 Not Found si no existe el curso.
+**DELETE** `/api/v1/course/{id}`
 
-❌ Eliminar un curso
-DELETE /api/v1/course/{id}
+- Parámetro: `id` (UUID)  
+- Devuelve código `200 OK` si fue eliminado.  
+- Devuelve `404 Not Found` si no existe el curso.
 
-Parámetro: id (UUID)
+---
 
-Devuelve código 200 OK si fue eliminado.
+## 🔍 Documentación Swagger
 
-Devuelve 404 Not Found si no existe el curso.
-
-🔍 Documentación Swagger
-Accede a Swagger UI en:
-
-bash
-Mostrar siempre los detalles
-
-Copiar
-http://localhost:8083/swagger-ui/index.html
+Accede a Swagger UI en:  
+[http://localhost:8083/swagger-ui/index.html](http://localhost:8083/swagger-ui/index.html)  
 Desde ahí podés probar todos los endpoints directamente.
 
-🐳 Docker
-Construir imagen
-bash
-Mostrar siempre los detalles
+---
 
-Copiar
+## 🐳 Docker
+
+### Construir imagen
+
+```bash
 docker build -t course-api .
-Correr contenedor
-bash
-Mostrar siempre los detalles
+```
 
-Copiar
+### Correr contenedor
+
+```bash
 docker run -p 8083:8083 course-api
-🥪 Pruebas recomendadas
+```
+
+---
+
+## 🥪 Pruebas recomendadas
+
 Prueba los siguientes endpoints con Swagger UI o Postman y toma capturas:
 
-GET /api/v1/course
+- `GET /api/v1/course`
+- `GET /api/v1/course/{id}`
+- `POST /api/v1/course`
+- `PUT /api/v1/course/{id}`
+- `DELETE /api/v1/course/{id}`
 
-GET /api/v1/course/{id}
+---
 
-POST /api/v1/course
+## 📌 Recomendaciones Finales
 
-PUT /api/v1/course/{id}
+- Valida los datos de entrada usando `@Valid` en los métodos POST y PUT para asegurar integridad.
+- Controla errores con respuestas HTTP claras (`400`, `404`, `200`).
+- Mantén una estructura limpia y organizada en Controller, Service y Repository.
+- Documenta con Swagger para facilitar pruebas y mantenimiento.
+- Configura correctamente la conexión a MySQL en `application.properties` o `application.yml`.
 
-DELETE /api/v1/course/{id}
+Ejemplo básico para MySQL en `application.properties`:
 
-📌 Recomendaciones Finales
-Valida los datos de entrada usando @Valid en los métodos POST y PUT para asegurar integridad.
-
-Controla errores con respuestas HTTP claras (400, 404, 200).
-
-Mantén una estructura limpia y organizada en Controller, Service y Repository.
-
-Documenta con Swagger para facilitar pruebas y mantenimiento.
-
-Configura correctamente la conexión a MySQL en application.properties o application.yml.
-
-Ejemplo básico para MySQL en application.properties:
-
-properties
-Mostrar siempre los detalles
-
-Copiar
+```properties
 spring.datasource.url=jdbc:mysql://localhost:3306/nombre_base_de_datos?useSSL=false&serverTimezone=UTC
 spring.datasource.username=tu_usuario
 spring.datasource.password=tu_contraseña
@@ -143,5 +138,10 @@ spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
-📞 Autor
-Nombre: Jaime Loff
+```
+
+---
+
+## 📞 Autor
+
+**Nombre:** Jaime Loff
