@@ -1,4 +1,3 @@
-
 # 📘 API de Gestión de Cursos
 
 Esta API permite gestionar cursos mediante operaciones CRUD (Crear, Leer, Actualizar, Eliminar).
@@ -10,7 +9,7 @@ Esta API permite gestionar cursos mediante operaciones CRUD (Crear, Leer, Actual
 - Java 17  
 - Spring Boot 3+  
 - Spring Data JPA  
-- Oracle Database  
+- MySQL Database  
 - Swagger para documentación  
 - Docker para contenerización  
 - Lombok  
@@ -53,99 +52,96 @@ Esta API permite gestionar cursos mediante operaciones CRUD (Crear, Leer, Actual
   "duracionCurso": 40,
   "precioCurso": 100
 }
-```
+Validaciones automáticas con @Valid:
 
-- Validaciones automáticas con `@Valid`:  
-  - `nombreCurso` no puede estar vacío.  
-  - `cantidadEstudiantes` y `precioCurso` no pueden ser negativos.  
-- Devuelve el curso creado con su `idCurso`.  
-- Responde `400 Bad Request` si los datos no cumplen validaciones.
+nombreCurso no puede estar vacío.
 
----
+cantidadEstudiantes y precioCurso no pueden ser negativos.
 
-### 📝 Actualizar un curso
+Devuelve el curso creado con su idCurso.
 
-**PUT** `/api/v1/course/{id}`
+Responde 400 Bad Request si los datos no cumplen validaciones.
 
-- Parámetro: `id` (UUID)  
-- Body igual que POST.  
-- Validaciones automáticas con `@Valid` igual que POST.  
-- Devuelve el curso actualizado o `404 Not Found` si no existe el curso.
+📝 Actualizar un curso
+PUT /api/v1/course/{id}
 
----
+Parámetro: id (UUID)
 
-### ❌ Eliminar un curso
+Body igual que POST.
 
-**DELETE** `/api/v1/course/{id}`
+Validaciones automáticas con @Valid igual que POST.
 
-- Parámetro: `id` (UUID)  
-- Devuelve código `200 OK` si fue eliminado.  
-- Devuelve `404 Not Found` si no existe el curso.
+Devuelve el curso actualizado o 404 Not Found si no existe el curso.
 
----
+❌ Eliminar un curso
+DELETE /api/v1/course/{id}
 
-## 🔍 Documentación Swagger
+Parámetro: id (UUID)
 
+Devuelve código 200 OK si fue eliminado.
+
+Devuelve 404 Not Found si no existe el curso.
+
+🔍 Documentación Swagger
 Accede a Swagger UI en:
 
-```
-http://localhost:8083/swagger-ui/index.html
-```
+bash
+Mostrar siempre los detalles
 
+Copiar
+http://localhost:8083/swagger-ui/index.html
 Desde ahí podés probar todos los endpoints directamente.
 
----
+🐳 Docker
+Construir imagen
+bash
+Mostrar siempre los detalles
 
-## 🐳 Docker
-
-### Construir imagen
-
-```bash
+Copiar
 docker build -t course-api .
-```
+Correr contenedor
+bash
+Mostrar siempre los detalles
 
-### Correr contenedor
-
-```bash
+Copiar
 docker run -p 8083:8083 course-api
-```
-
----
-
-## 🥪 Pruebas recomendadas
-
+🥪 Pruebas recomendadas
 Prueba los siguientes endpoints con Swagger UI o Postman y toma capturas:
 
-- GET `/api/v1/course`  
-- GET `/api/v1/course/{id}`  
-- POST `/api/v1/course`  
-- PUT `/api/v1/course/{id}`  
-- DELETE `/api/v1/course/{id}`  
+GET /api/v1/course
 
----
+GET /api/v1/course/{id}
 
-## 📌 Recomendaciones Finales
+POST /api/v1/course
 
-- Usa `@Valid` para validación automática en POST y PUT.  
-- Controla errores con respuestas HTTP claras (400, 404, 200).  
-- Documenta bien con Swagger para facilitar pruebas.  
-- Mantén separada la lógica en Controller, Service y Repository.  
-- Ajusta configuración para Oracle en `application.properties` o `application.yml`.  
+PUT /api/v1/course/{id}
 
-Ejemplo básico para Oracle en `application.properties`:
+DELETE /api/v1/course/{id}
 
-```properties
-spring.datasource.url=jdbc:oracle:thin:@//localhost:1521/xe
+📌 Recomendaciones Finales
+Valida los datos de entrada usando @Valid en los métodos POST y PUT para asegurar integridad.
+
+Controla errores con respuestas HTTP claras (400, 404, 200).
+
+Mantén una estructura limpia y organizada en Controller, Service y Repository.
+
+Documenta con Swagger para facilitar pruebas y mantenimiento.
+
+Configura correctamente la conexión a MySQL en application.properties o application.yml.
+
+Ejemplo básico para MySQL en application.properties:
+
+properties
+Mostrar siempre los detalles
+
+Copiar
+spring.datasource.url=jdbc:mysql://localhost:3306/nombre_base_de_datos?useSSL=false&serverTimezone=UTC
 spring.datasource.username=tu_usuario
 spring.datasource.password=tu_contraseña
-spring.datasource.driver-class-name=oracle.jdbc.driver.OracleDriver
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 
-spring.jpa.database-platform=org.hibernate.dialect.Oracle12cDialect
 spring.jpa.hibernate.ddl-auto=update
-```
-
----
-
-## 📞 Autor
-
-- Nombre: Jaime Loff
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
+📞 Autor
+Nombre: Jaime Loff
