@@ -1,4 +1,4 @@
-package com.loff.api.gestion.cursos.Exception;
+package com.loff.api.gestion.cursos.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -7,7 +7,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
