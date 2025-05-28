@@ -144,4 +144,4 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
 
 ## 📞 Autor
 
-**Nombre:** Jaime Loff
+**Nombre:** Jaime Loff Miralles
