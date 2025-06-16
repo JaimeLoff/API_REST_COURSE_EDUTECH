@@ -15,8 +15,6 @@ FROM eclipse-temurin:17-jre
 WORKDIR /cursos_app
 COPY --from=build /cursos_app/target/*.jar cursos_app.jar
 
-# Crear el directorio para la wallet
-RUN mkdir -p /wallet
 EXPOSE 8083
 
 ENTRYPOINT ["java", "-jar", "cursos_app.jar"]
