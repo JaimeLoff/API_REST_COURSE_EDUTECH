@@ -1,0 +1,82 @@
+name: build-and-deploy-java-api
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  build-and-test:
+    name: Compilar y ejecutar pruebas
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Java 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Ejecutar pruebas Maven
+        run: |
+          ./mvnw test
+
+  deploy-to-ec2:
+    name: Desplegar en EC2 AWS
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v4
+
+      - name: Crear carpeta en servidor remoto
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.IP_SERVER }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            mkdir -p /home/ubuntu/app
+
+      - name: Sincronizar archivos al servidor remoto
+        uses: burnett01/rsync-deployments@7.0.2
+        with:
+          switches: "-avz --delete"
+          path: "./"
+          remote_host: ${{ secrets.IP_SERVER }}
+          remote_user: ${{ secrets.USERNAME }}
+          remote_path: "/home/ubuntu/app/"
+          remote_key: ${{ secrets.PRIVATE_KEY }}
+          remote_port: ${{ secrets.PORT }}
+
+      - name: Crear archivo .env en servidor
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.IP_SERVER }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cat <<EOF > /home/ubuntu/app/.env
+            DB_ENDPOINT=${{ secrets.DB_ENDPOINT }}
+            DB_USERNAME=${{ secrets.DB_USERNAME }}
+            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+            DB_PORT=${{ secrets.DB_PORT }}
+            DB_NAME=${{ secrets.DB_NAME }}
+            EOF
+
+      - name: Levantar aplicación con Docker Compose
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.IP_SERVER }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd /home/ubuntu/app
+            sudo docker compose down
+            sudo docker compose up -d --build
