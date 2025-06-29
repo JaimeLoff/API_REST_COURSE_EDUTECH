@@ -1,4 +1,4 @@
-package com.loff.api.gestion.cursos.model;
+package com.loff.api.gestion.cursos.model.dto.response;
 
 import java.time.LocalDate;
 import java.util.UUID;

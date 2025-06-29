@@ -1,7 +1,9 @@
 package com.loff.api.gestion.cursos.controller;
 
 import com.loff.api.gestion.cursos.model.CourseManagement;
+import com.loff.api.gestion.cursos.model.dto.response.UserResponseDto;
 import com.loff.api.gestion.cursos.service.CourseManagementService;
+import com.loff.api.gestion.cursos.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,12 +21,34 @@ import java.util.UUID;
 public class CourseManagementController {
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private CourseManagementService courseManagementService;
 
     @GetMapping()
     public List<CourseManagement> getAllCourse(){
         return courseManagementService.getAllCourse();
     }
+
+    @GetMapping("/{idCourse}/users/{userId}")
+    public ResponseEntity<Object> getCourseWithUser(@PathVariable UUID idCourse, @PathVariable UUID userId) {
+        CourseManagement course = courseManagementService.getCourseById(idCourse);
+        if (course.getIdCurso() == null) {
+            Map<String, String> map = new HashMap<>();
+            map.put("message", "Course not found");
+            return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
+        }
+
+        UserResponseDto user = userService.fetchUserById(userId);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("course", course);
+        response.put("user", user);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 
     @GetMapping("/{idCourse}")
     public ResponseEntity<Object> getCourseById(@PathVariable UUID idCourse){
