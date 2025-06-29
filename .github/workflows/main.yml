@@ -20,11 +20,8 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Dar permiso a mvnw
-        run: chmod +x mvnw
-
       - name: Ejecutar pruebas Maven
-        run: ./mvnw test
+        run: mvn test
 
   deploy-to-ec2:
     name: Desplegar en EC2 AWS
